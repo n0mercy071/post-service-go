@@ -5,7 +5,7 @@ import (
 	"log"
 
 	postservicego "github.com/n0mercy071/post-service-go"
-	handler "github.com/n0mercy071/post-service-go/pkg/infrastructure/handler"
+	handler "github.com/n0mercy071/post-service-go/pkg/handler"
 )
 
 type ServerConfig struct {

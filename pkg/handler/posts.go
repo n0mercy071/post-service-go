@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/n0mercy071/post-service-go/pkg/domain/entity"
+	"github.com/n0mercy071/post-service-go/pkg/entity"
 )
 
 func (h *Handler) createPost(c *gin.Context) {
