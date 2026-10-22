@@ -6,6 +6,8 @@ import (
 
 	postservicego "github.com/n0mercy071/post-service-go"
 	handler "github.com/n0mercy071/post-service-go/pkg/handler"
+	"github.com/n0mercy071/post-service-go/pkg/repository"
+	"github.com/n0mercy071/post-service-go/pkg/service"
 )
 
 type ServerConfig struct {
@@ -17,7 +19,9 @@ func main() {
 	flag.StringVar(&serverConfig.port, "port", "8000", "server port")
 	flag.Parse()
 
-	handlers := new(handler.Handler)
+	repos := repository.NewRepository()
+	services := service.NewService(repos)
+	handlers := handler.NewHandler(services)
 	srv := new(postservicego.Server)
 
 	if err := srv.Run(serverConfig.port, handlers.InitRoutes()); err != nil {
