@@ -4,4 +4,5 @@
 
 ## RUN
 
+`migrate -path ./schema -database 'postgres://postgres_user:postgres_password@localhost/postgres_db?sslmode=disable' up`
 `go run ./cmd/main.go`
