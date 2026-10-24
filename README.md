@@ -4,5 +4,5 @@
 
 ## RUN
 
-`migrate -path ./schema -database 'postgres://postgres_user:postgres_password@localhost/postgres_db?sslmode=disable' up`
+`make dc_run` - запуск докера с базой и миграциями
 `go run ./cmd/main.go`
