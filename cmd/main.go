@@ -40,11 +40,11 @@ func initConfig() error {
 
 func initDB() (*sqlx.DB, error) {
 	return repository.NewPostgresDB(repository.Config{
-		Host:     viper.GetString("postgres_host"),
-		Port:     viper.GetString("postgres_port"),
-		Username: viper.GetString("postgres_user"),
-		Password: viper.GetString("postgres_password"),
-		DBName:   viper.GetString("postgres_db"),
-		SSLMode:  viper.GetString("postgres_sslmode"),
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.user"),
+		Password: viper.GetString("db.password"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
 	})
 }

@@ -1,8 +1,9 @@
 port: 8000
 
-postgres_host: localhost
-postgres_port: 5432
-postgres_db: postgres_db
-postgres_user: postgres_user
-postgres_password: postgres_password
-postgres_sslmode: disable
+db:
+  host: localhost
+  port: 5432
+  dbname: postgres_db
+  user: postgres_user
+  password: postgres_password
+  sslmode: disable
