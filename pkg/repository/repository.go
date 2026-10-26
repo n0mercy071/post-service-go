@@ -7,6 +7,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user entity.User) (int, error)
+	GetUser(username, passwordHash string) (entity.User, error)
 }
 
 type Post interface{}
