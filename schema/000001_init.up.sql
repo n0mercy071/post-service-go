@@ -1,13 +1,19 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL
+  user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE tags (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL
+  user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE posts_tags (
@@ -20,5 +26,5 @@ CREATE TABLE post_attachments (
   id SERIAL PRIMARY KEY,
   post_id INT REFERENCES posts(id) ON DELETE CASCADE NOT NULL,
   file_path VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL
+  user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );

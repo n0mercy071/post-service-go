@@ -1,9 +1,14 @@
 // Package service
 package service
 
-import "github.com/n0mercy071/post-service-go/pkg/repository"
+import (
+	"github.com/n0mercy071/post-service-go/pkg/entity"
+	"github.com/n0mercy071/post-service-go/pkg/repository"
+)
 
-type Authorization interface{}
+type Authorization interface {
+	CreateUser(user entity.User) (int, error)
+}
 
 type Post interface{}
 
@@ -13,5 +18,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization),
+	}
 }

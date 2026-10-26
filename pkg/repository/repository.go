@@ -1,9 +1,13 @@
-// Package repository
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	"github.com/n0mercy071/post-service-go/pkg/entity"
+)
 
-type Authorization interface{}
+type Authorization interface {
+	CreateUser(user entity.User) (int, error)
+}
 
 type Post interface{}
 
@@ -13,5 +17,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Authorization: NewAuthPostgres(db),
+	}
 }
