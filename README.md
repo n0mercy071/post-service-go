@@ -6,3 +6,7 @@
 
 `make dc_run` - запуск докера с базой и миграциями  
 `go run ./cmd/main.go`
+
+## ROADMAP
+
+- [ ] middleware аутентификация
