@@ -16,7 +16,8 @@ func (h *Handler) getPostList(c *gin.Context) {
 
 func (h *Handler) getPostByID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	post := entity.Post{ID: id}
+	userID, _ := c.Get("userID")
+	post := entity.Post{ID: id, UserID: userID.(int)}
 	c.JSON(http.StatusOK, post)
 }
 
