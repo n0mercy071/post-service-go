@@ -9,6 +9,25 @@ import (
 )
 
 func (h *Handler) createPost(c *gin.Context) {
+	userID, ok := c.Get("userID")
+	if !ok {
+		newErrorReponse(c, http.StatusUnauthorized, "userID not found")
+		return
+	}
+
+	var input entity.Post
+	if err := c.BindJSON(&input); err != nil {
+		newErrorReponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	post, err := h.services.CreatePost(userID.(int), input)
+	if err != nil {
+		newErrorReponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, post)
 }
 
 func (h *Handler) getPostList(c *gin.Context) {

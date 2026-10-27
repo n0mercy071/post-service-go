@@ -10,7 +10,9 @@ type Authorization interface {
 	GetUser(username, passwordHash string) (entity.User, error)
 }
 
-type Post interface{}
+type Post interface {
+	CreatePost(post entity.Post) (entity.Post, error)
+}
 
 type Repository struct {
 	Authorization
@@ -20,5 +22,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		Post:          NewPostPostgres(db),
 	}
 }
