@@ -11,7 +11,7 @@ type Authorization interface {
 }
 
 type Post interface {
-	CreatePost(post entity.Post) (entity.Post, error)
+	CreatePost(post entity.Post) (int, error)
 }
 
 type Repository struct {

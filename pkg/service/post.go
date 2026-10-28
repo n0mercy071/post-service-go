@@ -17,6 +17,16 @@ func NewPostService(repo repository.Post) *PostService {
 
 func (s *PostService) CreatePost(userID int, post entity.Post) (entity.Post, error) {
 	post.UserID = userID
+	for index := range post.Tags {
+		post.Tags[index].UserID = userID
+	}
 
-	return s.repo.CreatePost(post)
+	postID, err := s.repo.CreatePost(post)
+	if err != nil {
+		return post, err
+	}
+
+	post.ID = postID
+
+	return post, nil
 }

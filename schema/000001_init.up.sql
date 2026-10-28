@@ -12,14 +12,14 @@ CREATE TABLE posts (
 
 CREATE TABLE tags (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) UNIQUE NOT NULL,
   user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE posts_tags (
-  id SERIAL PRIMARY KEY,
   post_id INT REFERENCES posts(id) ON DELETE CASCADE NOT NULL,
-  tag_id INT REFERENCES tags(id) NOT NULL
+  tag_id INT REFERENCES tags(id) NOT NULL,
+  PRIMARY KEY(post_id, tag_id)
 );
 
 CREATE TABLE post_attachments (

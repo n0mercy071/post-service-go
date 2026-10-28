@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -18,38 +17,77 @@ func NewPostPostgres(db *sqlx.DB) *PostPostgres {
 	}
 }
 
-func (r *PostPostgres) CreatePost(post entity.Post) (entity.Post, error) {
-	fail := func(err error) (entity.Post, error) {
-		return entity.Post{}, err
+func (r *PostPostgres) CreatePost(post entity.Post) (int, error) {
+	fail := func(err error) (int, error) {
+		return 0, err
 	}
 
-	tx, err := r.db.Begin()
+	tx := r.db.MustBegin()
+
+	defer tx.Rollback()
+
+	postID, err := r.insertPost(tx, post)
+	if err != nil {
+		return fail(err)
+	}
+	err = r.insertTags(tx, postID, post.Tags)
 	if err != nil {
 		return fail(err)
 	}
 
-	defer tx.Rollback()
-
-	if err := r.insertPostAndUpdateStruct(tx, &post); err != nil {
-		fail(err)
-	}
-
 	if err := tx.Commit(); err != nil {
-		fail(err)
+		return fail(err)
 	}
 
-	return post, nil
+	return postID, nil
 }
 
-func (r *PostPostgres) insertPostAndUpdateStruct(tx *sql.Tx, post *entity.Post) error {
+func (r *PostPostgres) insertPost(tx *sqlx.Tx, post entity.Post) (int, error) {
 	var postID int
-	query := fmt.Sprintf("INSERT INTO %s (title, user_id) values ($1, $2) RETURNING id", postsTable)
+	query := fmt.Sprintf(
+		"INSERT INTO %s (title, user_id) values ($1, $2) RETURNING id",
+		postsTable,
+	)
 	row := tx.QueryRow(query, post.Title, post.UserID)
 	if err := row.Scan(&postID); err != nil {
-		return err
+		return 0, err
 	}
 
-	post.ID = postID
+	return postID, nil
+}
+
+func (r *PostPostgres) insertTags(tx *sqlx.Tx, postID int, tags []entity.Tag) error {
+	for _, tag := range tags {
+		_, err := tx.Exec(
+			`INSERT INTO tags (name, user_id) values ($1, $2)
+							ON CONFLICT (name) DO NOTHING`,
+			tag.Name,
+			tag.UserID,
+		)
+		if err != nil {
+			return err
+		}
+
+		var tagID int
+		err = tx.Get(
+			&tagID,
+			"SELECT id FROM tags WHERE name = $1",
+			tag.Name,
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.Exec(
+			`INSERT INTO posts_tags (post_id, tag_id) values ($1, $2)
+							ON CONFLICT DO NOTHING`,
+			postID,
+			tagID,
+		)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
