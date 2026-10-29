@@ -1,6 +1,10 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/jmoiron/sqlx"
 	postservicego "github.com/n0mercy071/post-service-go"
 	handler "github.com/n0mercy071/post-service-go/pkg/handler"
@@ -27,8 +31,22 @@ func main() {
 	handlers := handler.NewHandler(services)
 	srv := new(postservicego.Server)
 
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalln(err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			logrus.Fatalln(err.Error())
+		}
+	}()
+
+	logrus.Print("App started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	logrus.Print("App shutdown")
+
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error db close: %s", err.Error())
 	}
 }
 
