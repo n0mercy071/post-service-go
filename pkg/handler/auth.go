@@ -12,6 +12,17 @@ type signInInput struct {
 	Password string `json:"password"`
 }
 
+// @Summary signIn
+// @Tags auth
+// @ID create-user
+// @Accept json
+// @Produce json
+// @Param input body signInInput true "sign in input"
+// @Success 200 {integer} integer 1
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/sign-in [post]
 func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 
@@ -31,6 +42,17 @@ func (h *Handler) signIn(c *gin.Context) {
 	})
 }
 
+// @Summary signUp
+// @Tags auth
+// @ID sign-up
+// @Accept json
+// @Produce json
+// @Param input body entity.User true "user info"
+// @Success 200 {integer} integer 1
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/sign-up [post]
 func (h *Handler) signUp(c *gin.Context) {
 	var input entity.User
 

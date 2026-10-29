@@ -14,6 +14,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title post-service-go
+// @version 1.0
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey jwtToken
+// @in header
+// @name Authorization
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 

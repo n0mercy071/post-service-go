@@ -8,6 +8,16 @@ import (
 	"github.com/n0mercy071/post-service-go/pkg/entity"
 )
 
+// @Summary createPost
+// @Tags posts
+// @ID create-post
+// @Accept json
+// @Produce json
+// @Param input body entity.Post true "post info"
+// @Success 200 {object} entity.Post
+// @Failure 400, 401 errorResponse
+// @Security jwtToken
+// @Router /api/posts [post]
 func (h *Handler) createPost(c *gin.Context) {
 	userID, ok := c.Get("userID")
 	if !ok {
