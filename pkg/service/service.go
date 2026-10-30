@@ -14,6 +14,7 @@ type Authorization interface {
 
 type Post interface {
 	CreatePost(userID int, post entity.Post) (entity.Post, error)
+	GetByID(postID int) (entity.Post, error)
 }
 
 type Service struct {

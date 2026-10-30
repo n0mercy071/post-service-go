@@ -12,6 +12,7 @@ type Authorization interface {
 
 type Post interface {
 	CreatePost(post entity.Post) (int, error)
+	GetByID(postID int) (entity.Post, error)
 }
 
 type Repository struct {

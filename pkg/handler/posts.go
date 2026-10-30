@@ -15,7 +15,7 @@ import (
 // @Produce json
 // @Param input body entity.Post true "post info"
 // @Success 200 {object} entity.Post
-// @Failure 400, 401 errorResponse
+// @Failure 400,401 {object} errorResponse
 // @Security jwtToken
 // @Router /api/posts [post]
 func (h *Handler) createPost(c *gin.Context) {
@@ -43,10 +43,33 @@ func (h *Handler) createPost(c *gin.Context) {
 func (h *Handler) getPostList(c *gin.Context) {
 }
 
+// @Summary getPostByID
+// @Tags posts
+// @ID get-post-by-id
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Success 200 {object} entity.Post
+// @Failure 400,401 {object} errorResponse
+// @Security jwtToken
+// @Router /api/posts/{id} [get]
 func (h *Handler) getPostByID(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	userID, _ := c.Get("userID")
-	post := entity.Post{ID: id, UserID: userID.(int)}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorReponse(c, http.StatusBadRequest, "id not parsed")
+		return
+	}
+
+	_, ok := c.Get("userID")
+	if !ok {
+		newErrorReponse(c, http.StatusUnauthorized, "userID not found")
+		return
+	}
+
+	post, err := h.services.Post.GetByID(id)
+	if err != nil {
+		newErrorReponse(c, http.StatusInternalServerError, "failed to get post")
+	}
 	c.JSON(http.StatusOK, post)
 }
 

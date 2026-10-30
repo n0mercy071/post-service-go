@@ -1,11 +1,11 @@
 package entity
 
 type Post struct {
-	ID         int              `json:"id" db:"id"`
-	Title      string           `json:"title" db:"title" binding:"required"`
-	UserID     int              `json:"user_id" db:"user_id"`
-	Tags       []Tag            `json:"tags"`
-	Attachment []PostAttachment `json:"attachments"`
+	ID          int              `json:"id" db:"id"`
+	Title       string           `json:"title" db:"title" binding:"required"`
+	UserID      int              `json:"user_id" db:"user_id"`
+	Tags        []Tag            `json:"tags"`
+	Attachments []PostAttachment `json:"attachments"`
 }
 
 type Tag struct {

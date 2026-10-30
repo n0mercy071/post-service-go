@@ -91,3 +91,38 @@ func (r *PostPostgres) insertTags(tx *sqlx.Tx, postID int, tags []entity.Tag) er
 
 	return nil
 }
+
+func (r *PostPostgres) GetByID(postID int) (entity.Post, error) {
+	var post entity.Post
+
+	err := r.db.Get(
+		&post,
+		"SELECT id, title, user_id FROM posts WHERE id = $1",
+		postID,
+	)
+	if err != nil {
+		return post, err
+	}
+
+	err = r.db.Select(
+		&post.Tags,
+		`SELECT t.id, t.name, t.user_id
+						FROM tags t
+							JOIN posts_tags pt ON pt.tag_id = t.id
+						WHERE pt.post_id = $1`,
+		post.ID,
+	)
+	if err != nil {
+		return post, err
+	}
+
+	err = r.db.Select(
+		&post.Attachments,
+		`SELECT id, post_id, user_id, file_path
+						FROM post_attachments
+						WHERE post_id = $1`,
+		post.ID,
+	)
+
+	return post, err
+}

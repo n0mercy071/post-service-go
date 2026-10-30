@@ -30,3 +30,7 @@ func (s *PostService) CreatePost(userID int, post entity.Post) (entity.Post, err
 
 	return post, nil
 }
+
+func (s *PostService) GetByID(postID int) (entity.Post, error) {
+	return s.repo.GetByID(postID)
+}
